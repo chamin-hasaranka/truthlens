@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel - TruthLens AI{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+
+        <div class="mb-4" data-animate="fade-up">
+            <span class="section-tag">ADMIN PANEL</span>
+            <h2 class="section-title mb-0">Platform Overview</h2>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="0">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-blue"><i class="bi bi-people"></i></div>
+                    <h3 class="stat-card-value">{{ total_users }}</h3>
+                    <p class="stat-card-label">Total Users</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="100">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-purple"><i class="bi bi-bar-chart-line"></i></div>
+                    <h3 class="stat-card-value">{{ total_predictions }}</h3>
+                    <p class="stat-card-label">Total Predictions</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="200">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-green"><i class="bi bi-check-circle"></i></div>
+                    <h3 class="stat-card-value">{{ total_real }}</h3>
+                    <p class="stat-card-label">REAL Detected</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="300">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-red"><i class="bi bi-x-circle"></i></div>
+                    <h3 class="stat-card-value">{{ total_fake }}</h3>
+                    <p class="stat-card-label">FAKE Detected</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="panel-card" data-animate="fade-up" data-delay="100">
+            <ul class="nav nav-tabs admin-tabs mb-4" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#usersTab" type="button">
+                        <i class="bi bi-people me-2"></i>Users ({{ total_users }})
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#predictionsTab" type="button">
+                        <i class="bi bi-bar-chart-line me-2"></i>Predictions ({{ total_predictions }})
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Users Tab -->
+                <div class="tab-pane fade show active" id="usersTab">
+                    {% if users %}
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for u in users %}
+                                <tr>
+                                    <td class="text-muted">{{ u['id'] }}</td>
+                                    <td>{{ u['username'] }}</td>
+                                    <td>{{ u['email'] }}</td>
+                                    <td>
+                                        {% if u['is_admin'] %}
+                                            <span class="badge text-bg-warning">Admin</span>
+                                        {% else %}
+                                            <span class="badge text-bg-secondary">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">{{ u['created_at'] }}</td>
+                                    <td class="text-end">
+                                        {% if u['id'] != session.get('user_id') %}
+                                        <form method="POST" action="{{ url_for('admin_delete_user', user_id=u['id']) }}"
+                                              onsubmit="return confirm('Delete this user and all their predictions?');">
+                                            <button type="submit" class="btn btn-sm btn-icon-danger" title="Delete user">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        <span class="text-muted small">You</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state"><i class="bi bi-people"></i><p class="mb-0">No users found.</p></div>
+                    {% endif %}
+                </div>
+
+                <!-- Predictions Tab -->
+                <div class="tab-pane fade" id="predictionsTab">
+                    {% if all_predictions %}
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>News Excerpt</th>
+                                    <th>Result</th>
+                                    <th>Confidence</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in all_predictions %}
+                                <tr>
+                                    <td class="text-muted">{{ p['id'] }}</td>
+                                    <td>{{ p['username'] }}</td>
+                                    <td class="text-truncate-cell" title="{{ p['news_text'] }}">
+                                        {{ p['news_text'][:70] }}{% if p['news_text']|length > 70 %}...{% endif %}
+                                    </td>
+                                    <td>
+                                        {% if p['prediction'] == 'REAL' %}
+                                            <span class="badge badge-real">REAL</span>
+                                        {% else %}
+                                            <span class="badge badge-fake">FAKE</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ p['confidence'] }}%</td>
+                                    <td class="text-muted small">{{ p['created_at'] }}</td>
+                                    <td class="text-end">
+                                        <form method="POST" action="{{ url_for('admin_delete_prediction', prediction_id=p['id']) }}"
+                                              onsubmit="return confirm('Delete this prediction?');">
+                                            <button type="submit" class="btn btn-sm btn-icon-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state"><i class="bi bi-bar-chart-line"></i><p class="mb-0">No predictions found.</p></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - TruthLens AI{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4" data-animate="fade-up">
+            <div>
+                <span class="section-tag">DASHBOARD</span>
+                <h2 class="section-title mb-0">Welcome back, {{ session.get('username') }} 👋</h2>
+            </div>
+            <a href="{{ url_for('predict') }}" class="btn btn-gradient rounded-pill px-4 mt-2">
+                <i class="bi bi-search me-2"></i>New Prediction
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="0">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-blue"><i class="bi bi-bar-chart-line"></i></div>
+                    <h3 class="stat-card-value">{{ total_predictions }}</h3>
+                    <p class="stat-card-label">Total Predictions</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="100">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-green"><i class="bi bi-check-circle"></i></div>
+                    <h3 class="stat-card-value">{{ real_count }}</h3>
+                    <p class="stat-card-label">REAL News Detected</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="200">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-red"><i class="bi bi-x-circle"></i></div>
+                    <h3 class="stat-card-value">{{ fake_count }}</h3>
+                    <p class="stat-card-label">FAKE News Detected</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="300">
+                <div class="stat-card">
+                    <div class="stat-card-icon icon-purple"><i class="bi bi-graph-up"></i></div>
+                    <h3 class="stat-card-value">{{ model_accuracy }}</h3>
+                    <p class="stat-card-label">Model Accuracy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Predictions -->
+        <div class="row">
+            <div class="col-12" data-animate="fade-up">
+                <div class="panel-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Predictions</h5>
+                        <a href="{{ url_for('history') }}" class="link-gradient small">View All <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    {% if recent_predictions %}
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>News Excerpt</th>
+                                    <th>Result</th>
+                                    <th>Confidence</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in recent_predictions %}
+                                <tr>
+                                    <td class="text-truncate-cell">{{ p['news_text'][:80] }}{% if p['news_text']|length > 80 %}...{% endif %}</td>
+                                    <td>
+                                        {% if p['prediction'] == 'REAL' %}
+                                            <span class="badge badge-real"><i class="bi bi-check-circle me-1"></i>REAL</span>
+                                        {% else %}
+                                            <span class="badge badge-fake"><i class="bi bi-x-circle me-1"></i>FAKE</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ p['confidence'] }}%</td>
+                                    <td class="text-muted small">{{ p['created_at'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p class="mb-3">You haven't made any predictions yet.</p>
+                        <a href="{{ url_for('predict') }}" class="btn btn-gradient rounded-pill px-4">Make Your First Prediction</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

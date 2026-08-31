@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ✅ WEBSITE TITLE (FIXED HERE) -->
+    <title>{% block title %}TruthLens AI - News Verification System{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="navbar navbar-expand-lg sticky-top app-navbar">
+    <div class="container">
+
+        <!-- ✅ BRAND NAME FIXED -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('landing') }}">
+            <span class="brand-icon"><i class="bi bi-shield-check"></i></span>
+            <span class="brand-text">TruthLens <span class="text-gradient">AI</span></span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
+                {% if session.get('user_id') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('predict') }}">Predict</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('history') }}">History</a></li>
+
+                    {% if session.get('is_admin') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_panel') }}">Admin</a></li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="btn btn-sm btn-outline-light rounded-pill px-3" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('landing') }}#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('landing') }}#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-gradient btn-sm rounded-pill px-3" href="{{ url_for('register') }}">Get Started</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- ============ FLASH MESSAGES ============ -->
+<div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- ============ MAIN CONTENT ============ -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="app-footer mt-auto">
+    <div class="container py-5">
+
+        <!-- ✅ FOOTER BRAND FIXED -->
+        <div class="mb-3">
+            <span class="brand-text">TruthLens <span class="text-gradient">AI</span></span>
+        </div>
+
+        <p class="text-muted small">
+            AI-powered Fake News Detection System using Machine Learning.
+        </p>
+
+        <hr>
+
+        <div class="text-center text-muted small">
+            &copy; 2026 TruthLens AI. All rights reserved.
+        </div>
+
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JS -->
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

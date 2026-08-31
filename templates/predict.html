@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Analyze News - TruthLens AI{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="text-center mb-4" data-animate="fade-up">
+            <span class="section-tag">AI ANALYSIS</span>
+            <h2 class="section-title">Analyze a News Article</h2>
+            <p class="section-subtitle mx-auto">Paste the full article text below and let our trained model classify it as REAL or FAKE.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-animate="fade-up" data-delay="100">
+                <div class="panel-card">
+                    <form method="POST" action="{{ url_for('predict') }}" id="predictForm">
+                        <div class="mb-3">
+                            <label class="form-label d-flex justify-content-between">
+                                <span><i class="bi bi-file-text me-2"></i>News Article Text</span>
+                                <span class="text-muted small" id="charCount">0 characters</span>
+                            </label>
+                            <textarea class="form-control textarea-custom" name="news_text" id="newsText" rows="10"
+                                placeholder="Paste the news article you want to verify here...">{{ news_text or '' }}</textarea>
+                            <div class="form-text">Minimum 20 characters required for an accurate prediction.</div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill sample-btn" data-sample="real">
+                                <i class="bi bi-lightning me-1"></i>Try REAL Sample
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill sample-btn" data-sample="fake">
+                                <i class="bi bi-lightning me-1"></i>Try FAKE Sample
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" id="clearBtn">
+                                <i class="bi bi-x-lg me-1"></i>Clear
+                            </button>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient w-100 rounded-pill py-3" id="analyzeBtn">
+                            <span class="btn-text"><i class="bi bi-cpu me-2"></i>Analyze with AI</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="info-strip mt-4">
+                    <i class="bi bi-shield-exclamation"></i>
+                    <p class="mb-0 small">
+                        This tool provides a statistical estimate based on patterns learned from training data.
+                        It is intended as a helpful aid, not a definitive fact-checking authority.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const SAMPLE_REAL = "The central bank announced on Wednesday that interest rates would remain unchanged following its quarterly policy meeting. In a statement released after the vote, officials cited steady inflation figures and a resilient labor market as key factors behind the decision. Economists surveyed by several financial outlets had largely anticipated the outcome, noting that the bank had signaled a cautious approach in previous communications. The finance ministry said it would continue monitoring economic indicators before the next scheduled review.";
+    const SAMPLE_FAKE = "SHOCKING: Scientists discover that drinking this one common kitchen ingredient every morning instantly cures every disease known to man, but the government and big pharma are doing EVERYTHING they can to hide this from you! Anonymous insiders claim thousands of doctors have been silenced. Share this NOW before they take it down forever! Wake up people, the truth is finally here!!!";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const textarea = document.getElementById('newsText');
+        const charCount = document.getElementById('charCount');
+        const form = document.getElementById('predictForm');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        function updateCount() {
+            charCount.textContent = textarea.value.length + ' characters';
+        }
+        updateCount();
+        textarea.addEventListener('input', updateCount);
+
+        document.querySelectorAll('.sample-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                textarea.value = btn.dataset.sample === 'real' ? SAMPLE_REAL : SAMPLE_FAKE;
+                updateCount();
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            textarea.value = '';
+            updateCount();
+        });
+
+        form.addEventListener('submit', function () {
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Analyzing...';
+        });
+    });
+</script>
+{% endblock %}

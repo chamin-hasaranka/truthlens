@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% block title %}TruthLens AI - AI-Powered Fake News Detection{% endblock %}
+
+{% block content %}
+
+<!-- ============ HERO SECTION ============ -->
+<section class="hero-section">
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center min-vh-hero">
+            <div class="col-lg-6" data-animate="fade-up">
+                <span class="badge-pill mb-3"><i class="bi bi-stars me-1"></i> Powered by Machine Learning</span>
+                <h1 class="hero-title">
+                    Detect <span class="text-gradient">Fake News</span><br>
+                    Before It Spreads
+                </h1>
+                <p class="hero-subtitle">
+                    TruthLens AI uses a trained TF-IDF + Passive Aggressive machine learning model
+                    to instantly analyze news articles and flag misinformation with a clear
+                    confidence score &mdash; helping you separate fact from fiction in seconds.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('predict') }}" class="btn btn-gradient btn-lg rounded-pill px-4">
+                            <i class="bi bi-search me-2"></i>Analyze News Now
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('register') }}" class="btn btn-gradient btn-lg rounded-pill px-4">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                            Sign In
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-4 mt-5 flex-wrap">
+                    <div>
+                        <h3 class="stat-number">TF-IDF</h3>
+                        <p class="stat-label">Vectorization</p>
+                    </div>
+                    <div>
+                        <h3 class="stat-number">PA Classifier</h3>
+                        <p class="stat-label">ML Algorithm</p>
+                    </div>
+                    <div>
+                        <h3 class="stat-number">Real-time</h3>
+                        <p class="stat-label">Predictions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0" data-animate="fade-up" data-delay="150">
+                <div class="hero-card-wrap">
+                    <div class="floating-card card-real">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>
+                            <h6 class="mb-0">REAL</h6>
+                            <small>97.4% confidence</small>
+                        </div>
+                    </div>
+                    <div class="floating-card card-fake">
+                        <i class="bi bi-x-circle-fill"></i>
+                        <div>
+                            <h6 class="mb-0">FAKE</h6>
+                            <small>93.1% confidence</small>
+                        </div>
+                    </div>
+                    <div class="glass-panel">
+                        <div class="glass-panel-header">
+                            <i class="bi bi-cpu"></i>
+                            <span>AI Analysis Engine</span>
+                        </div>
+                        <div class="fake-line"></div>
+                        <div class="fake-line w-75"></div>
+                        <div class="fake-line w-50"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <span class="badge text-bg-success">Verified Source</span>
+                            <span class="badge text-bg-secondary">Analyzing...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ TRUSTED / LOGOS STRIP ============ -->
+<section class="py-4 border-strip">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-6 col-md-3">
+                <i class="bi bi-graph-up-arrow fs-3 text-gradient"></i>
+                <p class="small text-muted mt-2 mb-0">Statistical NLP Modeling</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="bi bi-database-check fs-3 text-gradient"></i>
+                <p class="small text-muted mt-2 mb-0">Trained on Real News Data</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="bi bi-lightning-charge fs-3 text-gradient"></i>
+                <p class="small text-muted mt-2 mb-0">Instant Predictions</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="bi bi-lock-fill fs-3 text-gradient"></i>
+                <p class="small text-muted mt-2 mb-0">Secure User Accounts</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FEATURES SECTION ============ -->
+<section id="features" class="py-5 section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-animate="fade-up">
+            <span class="section-tag">FEATURES</span>
+            <h2 class="section-title">Everything You Need to Spot Misinformation</h2>
+            <p class="section-subtitle mx-auto">
+                A complete toolkit for analyzing, tracking, and understanding news credibility.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4" data-animate="fade-up" data-delay="0">
+                <div class="feature-card h-100">
+                    <div class="feature-icon icon-blue"><i class="bi bi-search"></i></div>
+                    <h5>Instant Predictions</h5>
+                    <p class="text-muted mb-0">Paste any article and get a REAL or FAKE classification in milliseconds, powered by a trained ML model.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4" data-animate="fade-up" data-delay="100">
+                <div class="feature-card h-100">
+                    <div class="feature-icon icon-purple"><i class="bi bi-percent"></i></div>
+                    <h5>Confidence Scoring</h5>
+                    <p class="text-muted mb-0">Every prediction includes a transparent confidence percentage so you know how certain the model is.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4" data-animate="fade-up" data-delay="200">
+                <div class="feature-card h-100">
+                    <div class="feature-icon icon-green"><i class="bi bi-clock-history"></i></div>
+                    <h5>Prediction History</h5>
+                    <p class="text-muted mb-0">Every analysis is saved to your personal history, complete with timestamps, for future reference.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4" data-animate="fade-up" data-delay="0">
+                <div class="feature-card h-100">
+                    <div class="feature-icon icon-orange"><i class="bi bi-speedometer2"></i></div>
+                    <h5>Personal Dashboard</h5>
+                    <p class="text-muted mb-0">Track your total predictions, REAL vs FAKE counts, and overall model accuracy at a glance.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4" data-animate="fade-up" data-delay="100">
+                <div class="feature-card h-100">
+                    <div class="feature-icon icon-red"><i class="bi bi-shield-lock"></i></div>
+                    <h5>Secure Accounts</h5>
+                    <p class="text-muted mb-0">Passwords are hashed and sessions are securely managed, keeping your account safe.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4" data-animate="fade-up" data-delay="200">
+                <div class="feature-card h-100">
+                    <div class="feature-icon icon-teal"><i class="bi bi-gear-wide-connected"></i></div>
+                    <h5>Admin Controls</h5>
+                    <p class="text-muted mb-0">Administrators get a full overview of users, predictions, and platform-wide statistics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ABOUT SECTION ============ -->
+<section id="about" class="py-5 section-padding about-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-animate="fade-up">
+                <span class="section-tag">ABOUT THE PROJECT</span>
+                <h2 class="section-title">How TruthLens AI Works</h2>
+                <p class="text-muted">
+                    TruthLens AI is built on a classic but powerful natural language processing
+                    pipeline. News articles from a labeled dataset of real and fake news are
+                    cleaned and transformed into numerical features using a
+                    <strong>TF-IDF (Term Frequency&ndash;Inverse Document Frequency)</strong> vectorizer,
+                    which captures how important each word is relative to the entire corpus.
+                </p>
+                <p class="text-muted">
+                    These features are then fed into a <strong>Passive Aggressive Classifier</strong>,
+                    an online learning algorithm well-suited for large-scale text classification tasks.
+                    The trained model and vectorizer are serialized with <strong>Joblib</strong> and loaded
+                    by the Flask backend to serve real-time predictions.
+                </p>
+                <div class="row mt-4 g-3">
+                    <div class="col-6">
+                        <div class="about-stat">
+                            <h4>01</h4>
+                            <p class="mb-0 text-muted small">Clean &amp; preprocess text</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="about-stat">
+                            <h4>02</h4>
+                            <p class="mb-0 text-muted small">TF-IDF vectorization</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="about-stat">
+                            <h4>03</h4>
+                            <p class="mb-0 text-muted small">Train Passive Aggressive model</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="about-stat">
+                            <h4>04</h4>
+                            <p class="mb-0 text-muted small">Serve predictions via Flask</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-animate="fade-up" data-delay="150">
+                <div class="code-window">
+                    <div class="code-window-header">
+                        <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+                        <span class="ms-2 small text-muted">train_model.py</span>
+                    </div>
+                    <pre class="code-window-body"><code><span class="code-comment"># Vectorize text using TF-IDF</span>
+vectorizer = TfidfVectorizer(
+    stop_words=<span class="code-string">"english"</span>,
+    max_df=<span class="code-number">0.7</span>
+)
+X_train_tfidf = vectorizer.fit_transform(X_train)
+
+<span class="code-comment"># Train the classifier</span>
+model = PassiveAggressiveClassifier(
+    max_iter=<span class="code-number">1000</span>
+)
+model.fit(X_train_tfidf, y_train)
+
+<span class="code-comment"># Save with joblib</span>
+joblib.dump(model, <span class="code-string">"fake_news_model.pkl"</span>)</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CTA SECTION ============ -->
+<section class="py-5 cta-section">
+    <div class="container text-center" data-animate="fade-up">
+        <h2 class="section-title">Ready to Verify Your Next Headline?</h2>
+        <p class="section-subtitle mx-auto mb-4">Create a free account and start detecting fake news in seconds.</p>
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('predict') }}" class="btn btn-gradient btn-lg rounded-pill px-5">Start Analyzing</a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-gradient btn-lg rounded-pill px-5">Create Free Account</a>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

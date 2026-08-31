@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Prediction History - TruthLens AI{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4" data-animate="fade-up">
+            <div>
+                <span class="section-tag">HISTORY</span>
+                <h2 class="section-title mb-0">Your Prediction History</h2>
+            </div>
+            <a href="{{ url_for('predict') }}" class="btn btn-gradient rounded-pill px-4 mt-2">
+                <i class="bi bi-plus-lg me-2"></i>New Prediction
+            </a>
+        </div>
+
+        <div class="panel-card" data-animate="fade-up" data-delay="100">
+            {% if predictions %}
+            <div class="table-responsive">
+                <table class="table table-custom align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>News Excerpt</th>
+                            <th>Result</th>
+                            <th>Confidence</th>
+                            <th>Date</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in predictions %}
+                        <tr>
+                            <td class="text-muted">{{ loop.index }}</td>
+                            <td class="text-truncate-cell" title="{{ p['news_text'] }}">
+                                {{ p['news_text'][:90] }}{% if p['news_text']|length > 90 %}...{% endif %}
+                            </td>
+                            <td>
+                                {% if p['prediction'] == 'REAL' %}
+                                    <span class="badge badge-real"><i class="bi bi-check-circle me-1"></i>REAL</span>
+                                {% else %}
+                                    <span class="badge badge-fake"><i class="bi bi-x-circle me-1"></i>FAKE</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ p['confidence'] }}%</td>
+                            <td class="text-muted small">{{ p['created_at'] }}</td>
+                            <td class="text-end">
+                                <form method="POST" action="{{ url_for('delete_history_item', prediction_id=p['id']) }}"
+                                      onsubmit="return confirm('Delete this prediction from your history?');">
+                                    <button type="submit" class="btn btn-sm btn-icon-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <p class="mb-3">No prediction history yet.</p>
+                <a href="{{ url_for('predict') }}" class="btn btn-gradient rounded-pill px-4">Make Your First Prediction</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

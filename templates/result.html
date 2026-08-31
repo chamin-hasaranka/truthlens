@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Prediction Result - TruthLens AI{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-animate="fade-up">
+
+                <div class="result-card {{ 'result-real' if prediction == 'REAL' else 'result-fake' }}">
+                    <div class="result-icon">
+                        {% if prediction == 'REAL' %}
+                            <i class="bi bi-check-circle-fill"></i>
+                        {% else %}
+                            <i class="bi bi-x-circle-fill"></i>
+                        {% endif %}
+                    </div>
+                    <h2 class="result-label">{{ prediction }}</h2>
+                    <p class="result-sub">
+                        {% if prediction == 'REAL' %}
+                            This article appears to be legitimate news.
+                        {% else %}
+                            This article shows characteristics commonly associated with fake news.
+                        {% endif %}
+                    </p>
+
+                    <div class="confidence-wrap mt-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-muted">Confidence Score</span>
+                            <span class="small fw-bold">{{ confidence }}%</span>
+                        </div>
+                        <div class="progress confidence-bar">
+                            <div class="progress-bar {{ 'bg-success' if prediction == 'REAL' else 'bg-danger' }}"
+                                 role="progressbar" style="width: {{ confidence }}%;"
+                                 aria-valuenow="{{ confidence }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-meta mt-4">
+                        <i class="bi bi-clock me-2"></i>Analyzed on {{ timestamp }}
+                    </div>
+                </div>
+
+                <div class="panel-card mt-4">
+                    <h6 class="mb-3"><i class="bi bi-file-text me-2"></i>Analyzed Text</h6>
+                    <p class="text-muted analyzed-text">{{ news_text }}</p>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4 justify-content-center">
+                    <a href="{{ url_for('predict') }}" class="btn btn-gradient rounded-pill px-4">
+                        <i class="bi bi-search me-2"></i>Analyze Another Article
+                    </a>
+                    <a href="{{ url_for('history') }}" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="bi bi-clock-history me-2"></i>View History
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="bi bi-speedometer2 me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
